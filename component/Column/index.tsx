@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
-import _ from 'lodash'
 
-import Issue from '../Card'
-import IssueModel from '../../model/IssueModel'
+import CardList from '../CardList'
 
 const Container = styled.div`
   margin: 8px;
@@ -28,19 +26,6 @@ const IssueList = styled.div<{ isDraggingOver: boolean }>`
   min-height: 100px;
 `
 
-const InnerList = React.memo(
-  ({ issueList }: { issueList: IssueModel[] }): JSX.Element => {
-    return (
-      <>
-        {_.map(issueList, (issue, index) => (
-          <Issue key={issue.id} issue={issue} index={index} />
-        ))}
-      </>
-    )
-  },
-  (prevProps, nextProps) => nextProps.issueList === prevProps.issueList
-)
-
 const Column = ({ column, issueList, index }): JSX.Element => {
   return (
     <Draggable draggableId={column.id} index={index}>
@@ -54,7 +39,7 @@ const Column = ({ column, issueList, index }): JSX.Element => {
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                <InnerList issueList={issueList} />
+                <CardList issueList={issueList} />
                 {provided.placeholder}
               </IssueList>
             )}
