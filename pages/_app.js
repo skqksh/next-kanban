@@ -1,3 +1,4 @@
+/* eslint-disable */
 // pages/_app.js
 import 'bootstrap/dist/css/bootstrap.css'
 

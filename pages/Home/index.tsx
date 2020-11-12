@@ -1,18 +1,26 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+} from 'react-beautiful-dnd'
 
 import data from '../../data'
 
-import Column from '../../component/Column'
+import Column from '@component/Column'
 
 const Container = styled.div`
   display: flex;
 `
 
 const InnerList = ({ column, issueMap, index }): JSX.Element => {
-  const issueList = column.issueIdList.map((issueId) => issueMap[issueId])
-  return <Column column={column} issueList={issueList} index={index} />
+  const issueList = column.issueIdList.map(
+    (issueId) => issueMap[issueId]
+  )
+  return (
+    <Column column={column} issueList={issueList} index={index} />
+  )
 }
 
 const Home = (): JSX.Element => {
@@ -20,7 +28,7 @@ const Home = (): JSX.Element => {
   const [columnList, setColumns] = useState(data.columnList)
   const [issueList] = useState(data.issueList)
 
-  const onDragEnd = (result) => {
+  const onDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId, type } = result
 
     if (!destination) {
@@ -93,8 +101,11 @@ const Home = (): JSX.Element => {
         direction="horizontal"
         type="column"
       >
-        {(provided) => (
-          <Container {...provided.droppableProps} ref={provided.innerRef}>
+        {(provided): JSX.Element => (
+          <Container
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
             {columnOrder.map((columnId, index) => {
               const column = columnList[columnId]
               return (

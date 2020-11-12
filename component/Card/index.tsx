@@ -7,13 +7,14 @@ const Container = styled.div<{ isDragging: boolean }>`
   border-radius: 2px;
   padding: 8px;
   margin-bottom: 8px;
-  background-color: ${(props) => (props.isDragging ? 'lightgreen' : 'white')};
+  background-color: ${(props): string =>
+    props.isDragging ? 'lightgreen' : 'white'};
 `
 
-const Card = ({ issue, index }) => {
+const Card = ({ issue, index }): JSX.Element => {
   return (
     <Draggable draggableId={issue.id} index={index}>
-      {(provided, snapshot) => (
+      {(provided, snapshot): JSX.Element => (
         <Container
           {...provided.draggableProps}
           {...provided.dragHandleProps}

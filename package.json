@@ -9,7 +9,7 @@
     "start": "next start",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
-    "lint": "eslint . --ext ts --ext tsx --ext js",
+    "lint": "eslint --fix . --ext ts --ext tsx --ext js",
     "test": "jest",
     "test-all": "npm run lint && npm type-check && npm test"
   },
@@ -48,6 +48,7 @@
     "babel-jest": "^25.2.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.19.0",
     "husky": "^4.2.3",
     "jest": "^25.2.3",
