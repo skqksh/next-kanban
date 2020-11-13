@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 
+import ColumnModel from '@model/ColumnModel'
+import IssueModel from '@model/IssueModel'
 import CardList from '../CardList'
 
 const Container = styled.div`
@@ -26,7 +28,15 @@ const IssueList = styled.div<{ isDraggingOver: boolean }>`
   min-height: 100px;
 `
 
-const Column = ({ column, issueList, index }): JSX.Element => {
+const Column = ({
+  column,
+  issueList,
+  index,
+}: {
+  column: ColumnModel
+  issueList: IssueModel[]
+  index: number
+}): JSX.Element => {
   return (
     <Draggable draggableId={column.id} index={index}>
       {(provided): JSX.Element => (

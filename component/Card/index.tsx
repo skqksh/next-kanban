@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 
+import IssueModel from '@model/IssueModel'
+
 const Container = styled.div<{ isDragging: boolean }>`
   border: 1px solid lightgrey;
   border-radius: 2px;
@@ -11,7 +13,13 @@ const Container = styled.div<{ isDragging: boolean }>`
     props.isDragging ? 'lightgreen' : 'white'};
 `
 
-const Card = ({ issue, index }): JSX.Element => {
+const Card = ({
+  issue,
+  index,
+}: {
+  issue: IssueModel
+  index: number
+}): JSX.Element => {
   return (
     <Draggable draggableId={issue.id} index={index}>
       {(provided, snapshot): JSX.Element => (
