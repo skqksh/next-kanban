@@ -5,50 +5,23 @@ import {
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd'
+import { useRecoilState } from 'recoil'
 
 import Column from '@component/Column'
-import ColumnModel from '@model/ColumnModel'
-import IssueModel from '@model/IssueModel'
+
+import atom from '@atom'
 
 const Container = styled.div`
   display: flex;
   overflow: auto;
 `
 
-const InnerList = ({
-  column,
-  issueMap,
-  index,
-}: {
-  column: ColumnModel
-  issueMap: Record<string, IssueModel>
-  index: number
-}): JSX.Element => {
-  const issueList = column.issueIdList.map(
-    (issueId: string) => issueMap[issueId]
+const ColumnBoard = ({}: {}): JSX.Element => {
+  const [columnList, setColumnList] = useRecoilState(atom.ColumnList)
+  const [columnOrder, setColumnOrder] = useRecoilState(
+    atom.ColumnOrder
   )
-  return (
-    <Column column={column} issueList={issueList} index={index} />
-  )
-}
 
-const ColumnBoard = ({
-  columnList,
-  setColumnList,
-  columnOrder,
-  setColumnOrder,
-  issueList,
-  deleteColumn,
-}: {
-  columnList: Record<string, ColumnModel>
-  setColumnList: React.Dispatch<
-    React.SetStateAction<Record<string, ColumnModel>>
-  >
-  columnOrder: string[]
-  setColumnOrder: React.Dispatch<React.SetStateAction<string[]>>
-  issueList: Record<string, IssueModel>
-  deleteColumn: ({ columnId }: { columnId: string }) => void
-}): JSX.Element => {
   const onDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId, type } = result
 
@@ -130,10 +103,9 @@ const ColumnBoard = ({
             {columnOrder.map((columnId, index) => {
               const column = columnList[columnId]
               return (
-                <InnerList
+                <Column
                   key={column.id}
                   column={column}
-                  issueMap={issueList}
                   index={index}
                 />
               )

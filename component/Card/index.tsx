@@ -31,7 +31,7 @@ const Card = ({
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
         >
-          {issue.content}
+          {issue.description}
         </Container>
       )}
     </Draggable>

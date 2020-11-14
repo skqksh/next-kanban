@@ -9,12 +9,12 @@ const confirm = ({
 }: {
   message: string
   onConfirmClick: () => void
-  onCancelClick: () => void
+  onCancelClick?: () => void
 }): void => {
   if (window.confirm(message)) {
     onConfirmClick()
   } else {
-    onCancelClick()
+    onCancelClick && onCancelClick()
   }
 }
 

@@ -17,6 +17,7 @@
     "baseUrl": "./",
     "paths": {
       "@constant": ["./constant"],
+      "@atom": ["./atom"],
       "@model/*": ["./model/*"],
       "@component/*": ["./component/*"]
     }

@@ -1,61 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
+import { useSetRecoilState } from 'recoil'
 import _ from 'lodash'
-
-import { Alert } from '@constant'
-import ColumnModel from '@model/ColumnModel'
-import IssueModel from '@model/IssueModel'
 
 import AddColumn from './AddColumn'
 import IssueBoard from './IssueBoard'
 import data from '../../data'
 
+import atom from '@atom'
+
 const Home = (): JSX.Element => {
-  const [columnOrder, setColumnOrder] = useState<string[]>(
-    data.columnOrder
-  )
-  const [columnList, setColumnList] = useState<
-    Record<string, ColumnModel>
-  >(data.columnList)
-  const [issueList] = useState<Record<string, IssueModel>>(
-    data.issueList
-  )
+  const [initComplete, setInitComplete] = useState(false)
 
-  const addColumn = ({ title }: { title: string }): void => {
-    if (_.some(columnList, (x) => x.title === title)) {
-      Alert.alert({ message: `"${title}" is already exist` })
-      return
-    }
+  const setIssueList = useSetRecoilState(atom.IssueList)
+  const setColumnList = useSetRecoilState(atom.ColumnList)
+  const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
 
-    const columnId = `column-${_.size(columnList) + 1}`
-    const newColumn: ColumnModel = {
-      id: columnId,
-      title,
-      issueIdList: [],
-    }
-    setColumnList((ori) => {
-      return {
-        ...ori,
-        [columnId]: newColumn,
-      }
-    })
-    setColumnOrder((ori) => {
-      return ori.concat([columnId])
-    })
-  }
+  useEffect(() => {
+    setColumnList(data.columnList)
+    const sortedColumnOrder = _.map(
+      _.sortBy(_.toArray(data.columnList), (x) => x.order),
+      (x) => x.id
+    )
+    setColumnOrder(sortedColumnOrder)
+    setIssueList(data.issueList)
+    setInitComplete(true)
+  }, [])
 
   return (
     <Container fluid>
-      <AddColumn {...{ addColumn }} />
-      <IssueBoard
-        {...{
-          columnOrder,
-          setColumnOrder,
-          columnList,
-          setColumnList,
-          issueList,
-        }}
-      />
+      {initComplete && (
+        <>
+          <AddColumn />
+          <IssueBoard />
+        </>
+      )}
     </Container>
   )
 }

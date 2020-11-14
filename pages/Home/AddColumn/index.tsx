@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'react-bootstrap'
 import _ from 'lodash'
+import { useSetRecoilState, useRecoilState } from 'recoil'
 
+import atom from '@atom'
+import ColumnModel from '@model/ColumnModel'
 import { Alert, Colors } from '@constant'
 
 const Con = styled.div`
@@ -20,12 +23,11 @@ const Box = styled(Button)`
   width: 100%;
 `
 
-const AddColumn = ({
-  addColumn,
-}: {
-  addColumn: ({ title }: { title: string }) => void
-}): JSX.Element => {
+const AddColumn = (): JSX.Element => {
   const [inputTitle, setInputTitle] = useState('')
+
+  const [columnList, setColumnList] = useRecoilState(atom.ColumnList)
+  const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
 
   const _onClick = (): void => {
     const title = inputTitle.trim()
@@ -34,7 +36,27 @@ const AddColumn = ({
       Alert.alert({ message: 'Input column title. please :)' })
       return
     }
-    addColumn({ title })
+    if (_.some(columnList, (x) => x.title === title)) {
+      Alert.alert({ message: `"${title}" is already exist` })
+      return
+    }
+
+    const columnId = `column-${_.size(columnList) + 1}`
+    const newColumn: ColumnModel = {
+      id: columnId,
+      title,
+      order: _.size(columnList),
+      issueIdList: [],
+    }
+    setColumnList((ori) => {
+      return {
+        ...ori,
+        [columnId]: newColumn,
+      }
+    })
+    setColumnOrder((ori) => {
+      return ori.concat([columnId])
+    })
   }
 
   const _onChange = ({
