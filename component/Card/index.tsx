@@ -4,7 +4,7 @@ import { Draggable } from 'react-beautiful-dnd'
 
 import { Colors } from '@constant'
 
-import IssueModel from '@model/IssueModel'
+import CardModel from '@model/CardModel'
 
 const Container = styled.div<{ isDragging: boolean }>`
   border: 1px solid ${Colors.line};
@@ -16,14 +16,14 @@ const Container = styled.div<{ isDragging: boolean }>`
 `
 
 const Card = ({
-  issue,
+  card,
   index,
 }: {
-  issue: IssueModel
+  card: CardModel
   index: number
 }): JSX.Element => {
   return (
-    <Draggable draggableId={issue.id} index={index}>
+    <Draggable draggableId={card.id} index={index}>
       {(provided, snapshot): JSX.Element => (
         <Container
           {...provided.draggableProps}
@@ -31,7 +31,7 @@ const Card = ({
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
         >
-          {issue.description}
+          {card.name}
         </Container>
       )}
     </Draggable>

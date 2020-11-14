@@ -49,13 +49,13 @@ const ColumnBoard = ({}: {}): JSX.Element => {
     const foreign = columnList[destination.droppableId]
 
     if (home === foreign) {
-      const newissueIdList = Array.from(home.issueIdList)
-      newissueIdList.splice(source.index, 1)
-      newissueIdList.splice(destination.index, 0, draggableId)
+      const newcardIdList = Array.from(home.cardIdList)
+      newcardIdList.splice(source.index, 1)
+      newcardIdList.splice(destination.index, 0, draggableId)
 
       const newHome = {
         ...home,
-        issueIdList: newissueIdList,
+        cardIdList: newcardIdList,
       }
 
       setColumnList({
@@ -67,18 +67,18 @@ const ColumnBoard = ({}: {}): JSX.Element => {
     }
 
     // moving from one list to another
-    const homeissueIdList = Array.from(home.issueIdList)
-    homeissueIdList.splice(source.index, 1)
+    const homecardIdList = Array.from(home.cardIdList)
+    homecardIdList.splice(source.index, 1)
     const newHome = {
       ...home,
-      issueIdList: homeissueIdList,
+      cardIdList: homecardIdList,
     }
 
-    const foreignissueIdList = Array.from(foreign.issueIdList)
-    foreignissueIdList.splice(destination.index, 0, draggableId)
+    const foreigncardIdList = Array.from(foreign.cardIdList)
+    foreigncardIdList.splice(destination.index, 0, draggableId)
     const newForeign = {
       ...foreign,
-      issueIdList: foreignissueIdList,
+      cardIdList: foreigncardIdList,
     }
 
     setColumnList({

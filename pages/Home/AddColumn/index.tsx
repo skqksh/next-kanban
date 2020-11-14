@@ -36,7 +36,7 @@ const AddColumn = (): JSX.Element => {
       Alert.alert({ message: 'Input column title. please :)' })
       return
     }
-    if (_.some(columnList, (x) => x.title === title)) {
+    if (_.some(columnList, (x) => x.name === title)) {
       Alert.alert({ message: `"${title}" is already exist` })
       return
     }
@@ -44,9 +44,9 @@ const AddColumn = (): JSX.Element => {
     const columnId = `column-${_.size(columnList) + 1}`
     const newColumn: ColumnModel = {
       id: columnId,
-      title,
+      name: title,
       order: _.size(columnList),
-      issueIdList: [],
+      cardIdList: [],
     }
     setColumnList((ori) => {
       return {

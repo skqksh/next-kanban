@@ -38,7 +38,7 @@ const RemoveBtn = styled.button`
 const Title = styled.h3`
   padding: 8px;
 `
-const IssueList = styled.div<{ isDraggingOver: boolean }>`
+const CardListBox = styled.div<{ isDraggingOver: boolean }>`
   padding: 8px;
   transition: background-color 0.2s ease;
   background-color: ${(props): string =>
@@ -54,26 +54,26 @@ const Column = ({
   column: ColumnModel
   index: number
 }): JSX.Element => {
-  const issueList = _.toArray(
-    _.pick(useRecoilValue(atom.IssueList), column.issueIdList)
+  const cardList = _.toArray(
+    _.pick(useRecoilValue(atom.CardList), column.cardIdList)
   )
 
   const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
 
   const _onRemoveBtnClick = (): void => {
-    const remainedIssueLen = _.size(column.issueIdList)
-    if (remainedIssueLen > 0) {
+    const remainedCardLen = _.size(column.cardIdList)
+    if (remainedCardLen > 0) {
       Alert.alert({
         message: `There ${
-          remainedIssueLen === 1
-            ? 'is remaind issue'
-            : 'are remaind issues'
+          remainedCardLen === 1
+            ? 'is remaind card'
+            : 'are remaind cards'
         } in the column.`,
       })
       return
     }
     Alert.confirm({
-      message: `Do you really want to delete "${column.title}" colunm?`,
+      message: `Do you really want to delete "${column.name}" colunm?`,
       onConfirmClick: () => {
         setColumnOrder((ori) => {
           return ori.filter((x) => x !== column.id)
@@ -91,22 +91,20 @@ const Column = ({
           ref={provided.innerRef}
         >
           <Header>
-            <Title {...provided.dragHandleProps}>
-              {column.title}
-            </Title>
+            <Title {...provided.dragHandleProps}>{column.name}</Title>
             <RemoveBtn onClick={_onRemoveBtnClick}>X</RemoveBtn>
           </Header>
 
-          <Droppable droppableId={column.id} type="issue">
+          <Droppable droppableId={column.id} type="card">
             {(provided, snapshot): JSX.Element => (
-              <IssueList
+              <CardListBox
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                <CardList issueList={issueList} />
+                <CardList cardList={cardList} />
                 {provided.placeholder}
-              </IssueList>
+              </CardListBox>
             )}
           </Droppable>
         </Container>

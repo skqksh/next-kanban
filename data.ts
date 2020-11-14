@@ -1,54 +1,115 @@
 import ColumnModel from '@model/ColumnModel'
-import IssueModel from '@model/IssueModel'
+import CardModel, { CardStatusEnum } from '@model/CardModel'
 
 const initialData: {
   columnList: Record<string, ColumnModel>
-  issueList: Record<string, IssueModel>
+  cardList: Record<string, CardModel>
 } = {
-  issueList: {
-    'issue-1': { id: 'issue-1', description: 'Take out the garbage' },
-    'issue-2': {
-      id: 'issue-2',
-      description: 'Watch my favorite show',
+  cardList: {
+    'card-1': {
+      id: 'card-1',
+      name: 'Take out the garbage',
+      description: 'Basement, Kitchin',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 1,
+      status: CardStatusEnum.Open,
     },
-    'issue-3': { id: 'issue-3', description: 'Charge my phone' },
-    'issue-4': { id: 'issue-4', description: 'Cook dinner' },
-    'issue-5': { id: 'issue-5', description: 'Lesson 1' },
-    'issue-6': { id: 'issue-6', description: 'Lesson 2' },
-    'issue-7': { id: 'issue-7', description: 'Lesson 3' },
-    'issue-8': { id: 'issue-8', description: 'Lesson 4' },
-    'issue-9': { id: 'issue-9', description: 'Lesson 5' },
+    'card-2': {
+      id: 'card-2',
+      name: 'Watch my favorite show',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 1,
+      status: CardStatusEnum.Closed,
+    },
+    'card-3': {
+      id: 'card-3',
+      name: 'Charge my phone',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 1,
+      status: CardStatusEnum.Closed,
+    },
+    'card-4': {
+      id: 'card-4',
+      name: 'Cook dinner',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 1,
+      status: CardStatusEnum.Open,
+    },
+    'card-5': {
+      id: 'card-5',
+      name: 'Lesson 1',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 5,
+      status: CardStatusEnum.Open,
+    },
+    'card-6': {
+      id: 'card-6',
+      name: 'Lesson 2',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 4,
+      status: CardStatusEnum.Open,
+    },
+    'card-7': {
+      id: 'card-7',
+      name: 'Lesson 3',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 3,
+      status: CardStatusEnum.Open,
+    },
+    'card-8': {
+      id: 'card-8',
+      name: 'Lesson 4',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 2,
+      status: CardStatusEnum.Open,
+    },
+    'card-9': {
+      id: 'card-9',
+      name: 'Lesson 5',
+      createDate: new Date(),
+      updatedDate: new Date(),
+      order: 1,
+      status: CardStatusEnum.Open,
+    },
   },
   columnList: {
     'column-1': {
       id: 'column-1',
-      title: 'To do',
+      name: 'To do',
       order: 1,
-      issueIdList: ['issue-1', 'issue-2', 'issue-3', 'issue-4'],
+      cardIdList: ['card-1', 'card-2', 'card-3', 'card-4'],
     },
     'column-2': {
       id: 'column-2',
-      title: 'In progress',
+      name: 'In progress',
       order: 3,
-      issueIdList: [],
+      cardIdList: [],
     },
     'column-3': {
       id: 'column-3',
-      title: 'Blocked',
+      name: 'Blocked',
       order: 2,
-      issueIdList: ['issue-5'],
+      cardIdList: ['card-5'],
     },
     'column-4': {
       id: 'column-4',
-      title: 'Review',
+      name: 'Review',
       order: 5,
-      issueIdList: ['issue-6'],
+      cardIdList: ['card-6'],
     },
     'column-5': {
       id: 'column-5',
-      title: 'done',
+      name: 'done',
       order: 4,
-      issueIdList: ['issue-7', 'issue-8', 'issue-9'],
+      cardIdList: ['card-7', 'card-8', 'card-9'],
     },
   },
 }

@@ -4,7 +4,7 @@ import { useSetRecoilState } from 'recoil'
 import _ from 'lodash'
 
 import AddColumn from './AddColumn'
-import IssueBoard from './IssueBoard'
+import CardBoard from './CardBoard'
 import data from '../../data'
 
 import atom from '@atom'
@@ -12,7 +12,7 @@ import atom from '@atom'
 const Home = (): JSX.Element => {
   const [initComplete, setInitComplete] = useState(false)
 
-  const setIssueList = useSetRecoilState(atom.IssueList)
+  const setCardList = useSetRecoilState(atom.CardList)
   const setColumnList = useSetRecoilState(atom.ColumnList)
   const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
 
@@ -23,7 +23,7 @@ const Home = (): JSX.Element => {
       (x) => x.id
     )
     setColumnOrder(sortedColumnOrder)
-    setIssueList(data.issueList)
+    setCardList(data.cardList)
     setInitComplete(true)
   }, [])
 
@@ -32,7 +32,7 @@ const Home = (): JSX.Element => {
       {initComplete && (
         <>
           <AddColumn />
-          <IssueBoard />
+          <CardBoard />
         </>
       )}
     </Container>

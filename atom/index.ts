@@ -1,7 +1,7 @@
 import * as ColumnAtom from './ColumnAtom'
-import * as IssueAtom from './IssueAtom'
+import * as CardAtom from './CardAtom'
 
 export default {
   ...ColumnAtom,
-  ...IssueAtom,
+  ...CardAtom,
 }
