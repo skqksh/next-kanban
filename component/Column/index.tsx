@@ -2,16 +2,19 @@ import React from 'react'
 import styled from 'styled-components'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 
+import { Colors } from '@constant'
+
 import ColumnModel from '@model/ColumnModel'
 import IssueModel from '@model/IssueModel'
+
 import CardList from '../CardList'
 
 const Container = styled.div`
   margin: 8px;
-  border: 1px solid lightgrey;
+  border: 1px solid ${Colors.line};
   background-color: white;
   border-radius: 2px;
-  width: 220px;
+  min-width: 220px;
 
   display: flex;
   flex-direction: column;

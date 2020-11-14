@@ -12,6 +12,7 @@ import IssueModel from '@model/IssueModel'
 
 const Container = styled.div`
   display: flex;
+  overflow: auto;
 `
 
 const InnerList = ({
@@ -37,6 +38,7 @@ const ColumnBoard = ({
   columnOrder,
   setColumnOrder,
   issueList,
+  deleteColumn,
 }: {
   columnList: Record<string, ColumnModel>
   setColumnList: React.Dispatch<
@@ -45,6 +47,7 @@ const ColumnBoard = ({
   columnOrder: string[]
   setColumnOrder: React.Dispatch<React.SetStateAction<string[]>>
   issueList: Record<string, IssueModel>
+  deleteColumn: ({ columnId }: { columnId: string }) => void
 }): JSX.Element => {
   const onDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId, type } = result

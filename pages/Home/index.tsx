@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import _ from 'lodash'
 
+import { Alert } from '@constant'
 import ColumnModel from '@model/ColumnModel'
 import IssueModel from '@model/IssueModel'
 
@@ -21,6 +22,11 @@ const Home = (): JSX.Element => {
   )
 
   const addColumn = ({ title }: { title: string }): void => {
+    if (_.some(columnList, (x) => x.title === title)) {
+      Alert.alert({ message: `"${title}" is already exist` })
+      return
+    }
+
     const columnId = `column-${_.size(columnList) + 1}`
     const newColumn: ColumnModel = {
       id: columnId,

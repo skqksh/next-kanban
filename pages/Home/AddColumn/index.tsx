@@ -3,11 +3,13 @@ import styled from 'styled-components'
 import { Button } from 'react-bootstrap'
 import _ from 'lodash'
 
+import { Alert, Colors } from '@constant'
+
 const Con = styled.div`
   width: 220px;
   margin: 8px;
   padding: 8px;
-  border: 1px solid #888;
+  border: 1px solid ${Colors.line};
 `
 
 const InputColumnTitle = styled.input`
@@ -24,21 +26,38 @@ const AddColumn = ({
   addColumn: ({ title }: { title: string }) => void
 }): JSX.Element => {
   const [inputTitle, setInputTitle] = useState('')
+
   const _onClick = (): void => {
-    if (_.isEmpty(inputTitle)) {
-      alert('Please, input title')
+    const title = inputTitle.trim()
+    setInputTitle(title)
+    if (_.isEmpty(title)) {
+      Alert.alert({ message: 'Input column title. please :)' })
       return
     }
-    addColumn({ title: inputTitle })
+    addColumn({ title })
   }
+
+  const _onChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>): void => {
+    setInputTitle(value)
+  }
+
+  const _onKeyPress = ({
+    key,
+  }: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (key === 'Enter') {
+      _onClick()
+    }
+  }
+
   return (
     <Con>
       <InputColumnTitle
         placeholder={'Column Title'}
         value={inputTitle}
-        onChange={({ target: { value } }): void => {
-          setInputTitle(value)
-        }}
+        onChange={_onChange}
+        onKeyPress={_onKeyPress}
       />
       <Box onClick={_onClick}>+ Add Column</Box>
     </Con>
