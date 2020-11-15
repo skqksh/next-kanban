@@ -1,6 +1,7 @@
 enum AtomKeyEnum {
   CardList = 'CardList',
-  GetCardByKey = 'GetCardByKey',
+  CardDetailId = 'CardDetailId',
+  CardDetail = 'CardDetail',
   ColumnOrder = 'ColumnOrder',
   ColumnList = 'ColumnList',
 }
