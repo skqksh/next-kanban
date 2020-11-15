@@ -22,6 +22,12 @@ const CardBox = styled.div`
   margin-bottom: 8px;
   cursor: pointer;
 `
+const CardName = styled.div`
+  max-width: 180px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
 
 const StatusBox = styled.div`
   position: absolute;
@@ -38,7 +44,7 @@ export const Card = ({ card }: { card: CardModel }): JSX.Element => {
   return (
     <CardBox>
       <div onClick={_onClick}>
-        {card.name}
+        <CardName>{card.name}</CardName>
         <StatusBox>
           {card.status === 'Open' ? (
             <Badge variant="success">Open</Badge>
