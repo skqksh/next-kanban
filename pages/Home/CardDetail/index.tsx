@@ -33,7 +33,7 @@ const CardName = styled.div`
   border: 2px solid #00000000;
 `
 
-const CardNameInput = styled.input`
+const InputCardName = styled.input`
   width: 100%;
   font-size: 22px;
   font-weight: bold;
@@ -62,13 +62,18 @@ const ButtonBox = styled.div`
   text-align: right;
 `
 
+const SideSection = styled.div`
+  margin-bottom: 10px;
+`
+
 const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
   const [nameEditMode, setNameEditMode] = useState(false)
   const [descEditMode, setDescEditMode] = useState(false)
 
   const [inputName, setInputName] = useState(card.name)
   const [inputDesc, setInputDesc] = useState(card.description)
-  const cardNameInputRef = useRef<HTMLInputElement>()
+
+  const inputCardNameRef = useRef<HTMLInputElement>()
   const cardDescInputRef = useRef<HTMLTextAreaElement>()
 
   const [cardList, setCardList] = useRecoilState(atom.CardList)
@@ -121,8 +126,8 @@ const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
     <Container>
       <Modal.Header closeButton>
         {nameEditMode ? (
-          <CardNameInput
-            ref={cardNameInputRef}
+          <InputCardName
+            ref={inputCardNameRef}
             value={inputName}
             onChange={({ target: { value } }): void => {
               setInputName(value)
@@ -135,7 +140,7 @@ const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
             onClick={(): void => {
               setNameEditMode(true)
               setTimeout(() => {
-                cardNameInputRef.current.focus()
+                inputCardNameRef.current.focus()
               }, 100)
             }}
           >
@@ -181,18 +186,24 @@ const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
           )}
         </Col>
         <Col md={4}>
-          <ItemTitle>Status</ItemTitle>
-          <select onChange={_onChangeStatus} value={card.status}>
-            {_.map(CardStatusEnum, (v) => {
-              return <option key={v}>{v}</option>
-            })}
-          </select>
-          <ItemTitle>Created</ItemTitle>
-          <Text>
-            {moment(card.createDate).format('YYYY-MM-DD HH:mm')}
-          </Text>
-          <ItemTitle>Updated</ItemTitle>
-          <Text>{moment(card.updatedDate).fromNow()}</Text>
+          <SideSection>
+            <ItemTitle>Status</ItemTitle>
+            <select onChange={_onChangeStatus} value={card.status}>
+              {_.map(CardStatusEnum, (v) => {
+                return <option key={v}>{v}</option>
+              })}
+            </select>
+          </SideSection>
+          <SideSection>
+            <ItemTitle>Created</ItemTitle>
+            <Text>
+              {moment(card.createDate).format('YYYY-MM-DD HH:mm')}
+            </Text>
+          </SideSection>
+          <SideSection>
+            <ItemTitle>Updated</ItemTitle>
+            <Text>{moment(card.updatedDate).fromNow()}</Text>
+          </SideSection>
         </Col>
       </Row>
     </Container>

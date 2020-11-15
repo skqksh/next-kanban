@@ -12,7 +12,7 @@ const initialData: {
       description: 'Basement, Kitchin',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 1,
+      order: 0,
       status: CardStatusEnum.Open,
     },
     'card-2': {
@@ -28,7 +28,7 @@ const initialData: {
       name: 'Charge my phone',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 1,
+      order: 2,
       status: CardStatusEnum.Closed,
     },
     'card-4': {
@@ -36,7 +36,7 @@ const initialData: {
       name: 'Cook dinner',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 1,
+      order: 3,
       status: CardStatusEnum.Open,
     },
     'card-5': {
@@ -44,7 +44,7 @@ const initialData: {
       name: 'Lesson 1',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 5,
+      order: 0,
       status: CardStatusEnum.Open,
     },
     'card-6': {
@@ -52,7 +52,7 @@ const initialData: {
       name: 'Lesson 2',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 4,
+      order: 0,
       status: CardStatusEnum.Open,
     },
     'card-7': {
@@ -60,7 +60,7 @@ const initialData: {
       name: 'Lesson 3',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 3,
+      order: 0,
       status: CardStatusEnum.Open,
     },
     'card-8': {
@@ -68,7 +68,7 @@ const initialData: {
       name: 'Lesson 4',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 2,
+      order: 1,
       status: CardStatusEnum.Open,
     },
     'card-9': {
@@ -76,7 +76,7 @@ const initialData: {
       name: 'Lesson 5',
       createDate: new Date(),
       updatedDate: new Date(),
-      order: 1,
+      order: 2,
       status: CardStatusEnum.Open,
     },
   },

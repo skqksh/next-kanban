@@ -5,7 +5,8 @@ import {
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import _ from 'lodash'
 
 import Column from '@component/Column'
 
@@ -21,6 +22,21 @@ const ColumnBoard = ({}: {}): JSX.Element => {
   const [columnOrder, setColumnOrder] = useRecoilState(
     atom.ColumnOrder
   )
+  const [cardList, setCardList] = useRecoilState(atom.CardList)
+
+  const _updateCardOrder = ({
+    cardIdList,
+  }: {
+    cardIdList: string[]
+  }): void => {
+    const newCardList = _.clone(cardList)
+    _.forEach(cardIdList, (id, index) => {
+      const newCard = _.clone(cardList[id])
+      newCard.order = index
+      newCardList[id] = newCard
+    })
+    setCardList(newCardList)
+  }
 
   const onDragEnd = (result: DropResult): void => {
     const { destination, source, draggableId, type } = result
@@ -52,7 +68,7 @@ const ColumnBoard = ({}: {}): JSX.Element => {
       const newcardIdList = Array.from(home.cardIdList)
       newcardIdList.splice(source.index, 1)
       newcardIdList.splice(destination.index, 0, draggableId)
-
+      _updateCardOrder({ cardIdList: newcardIdList })
       const newHome = {
         ...home,
         cardIdList: newcardIdList,
@@ -69,6 +85,7 @@ const ColumnBoard = ({}: {}): JSX.Element => {
     // moving from one list to another
     const homecardIdList = Array.from(home.cardIdList)
     homecardIdList.splice(source.index, 1)
+    _updateCardOrder({ cardIdList: homecardIdList })
     const newHome = {
       ...home,
       cardIdList: homecardIdList,
@@ -76,6 +93,7 @@ const ColumnBoard = ({}: {}): JSX.Element => {
 
     const foreigncardIdList = Array.from(foreign.cardIdList)
     foreigncardIdList.splice(destination.index, 0, draggableId)
+    _updateCardOrder({ cardIdList: foreigncardIdList })
     const newForeign = {
       ...foreign,
       cardIdList: foreigncardIdList,
@@ -100,16 +118,7 @@ const ColumnBoard = ({}: {}): JSX.Element => {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {columnOrder.map((columnId, index) => {
-              const column = columnList[columnId]
-              return (
-                <Column
-                  key={column.id}
-                  column={column}
-                  index={index}
-                />
-              )
-            })}
+            <ColumnList columnOrder={columnOrder} />
             {provided.placeholder}
           </Container>
         )}
@@ -117,5 +126,23 @@ const ColumnBoard = ({}: {}): JSX.Element => {
     </DragDropContext>
   )
 }
+
+const ColumnList = React.memo(
+  ({ columnOrder }: { columnOrder: string[] }): JSX.Element => {
+    const columnList = useRecoilValue(atom.ColumnList)
+    return (
+      <>
+        {_.map(columnOrder, (columnId, index) => {
+          const column = columnList[columnId]
+          return (
+            <Column key={column.id} column={column} index={index} />
+          )
+        })}
+      </>
+    )
+  },
+  (prevProps, nextProps) =>
+    nextProps.columnOrder === prevProps.columnOrder
+)
 
 export default ColumnBoard

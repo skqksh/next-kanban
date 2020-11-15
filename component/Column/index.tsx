@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Droppable, Draggable } from 'react-beautiful-dnd'
 import _ from 'lodash'
@@ -8,8 +8,10 @@ import { Alert, Colors } from '@constant'
 import ColumnModel from '@model/ColumnModel'
 
 import CardList from '../CardList'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import atom from '@atom'
+import { Button } from 'react-bootstrap'
+import CardModel, { CardStatusEnum } from '@model/CardModel'
 
 const Container = styled.div`
   margin: 8px;
@@ -17,6 +19,7 @@ const Container = styled.div`
   background-color: white;
   border-radius: 2px;
   min-width: 220px;
+  padding: 8px;
 
   display: flex;
   flex-direction: column;
@@ -31,20 +34,31 @@ const RemoveBtn = styled.button`
   padding: 10px 15px;
   background-color: white;
   border: none;
+  border-radius: 50px;
   :focus {
     outline: none;
+  }
+  :hover {
+    background-color: #eee;
   }
 `
 const Title = styled.h3`
   padding: 8px;
 `
 const CardListBox = styled.div<{ isDraggingOver: boolean }>`
-  padding: 8px;
   transition: background-color 0.2s ease;
   background-color: ${(props): string =>
     props.isDraggingOver ? 'lightgrey' : 'inherit'};
   flex-grow: 1;
   min-height: 100px;
+`
+
+const AddCardBox = styled.div`
+  margin-bottom: 10px;
+`
+
+const InputCardName = styled.input`
+  margin-bottom: 10px;
 `
 
 const Column = ({
@@ -54,13 +68,62 @@ const Column = ({
   column: ColumnModel
   index: number
 }): JSX.Element => {
-  const cardList = _.toArray(
-    _.pick(useRecoilValue(atom.CardList), column.cardIdList)
-  )
+  const [addCardMode, setAddCardMode] = useState(false)
+  const [inputCardName, setInputCardName] = useState('')
 
+  const [cardList, setCardList] = useRecoilState(atom.CardList)
+  const [columnList, setColumnList] = useRecoilState(atom.ColumnList)
   const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
 
-  const _onRemoveBtnClick = (): void => {
+  const inputCardNameRef = useRef<HTMLInputElement>()
+
+  const columnCardList = _.toArray(
+    _.pick(cardList, column.cardIdList)
+  )
+
+  const _addCard = (): void => {
+    const _inputCardName = inputCardName.trim()
+    if (_inputCardName) {
+      const newCardList = _.clone(cardList)
+      const cardId = `card-${_.size(cardList) + 1}`
+      const newCard: CardModel = {
+        id: cardId,
+        createDate: new Date(),
+        updatedDate: new Date(),
+        name: _inputCardName,
+        order: _.size(columnCardList),
+        status: CardStatusEnum.Open,
+      }
+      newCardList[cardId] = newCard
+      setCardList(newCardList)
+
+      const newColumn = _.clone(column)
+      newColumn.cardIdList = newColumn.cardIdList.concat([cardId])
+      const newColumnList = _.clone(columnList)
+      newColumnList[column.id] = newColumn
+      setColumnList(newColumnList)
+
+      setInputCardName('')
+    }
+    setAddCardMode(false)
+  }
+
+  const _onKeyPressInputName = ({
+    key,
+  }: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (key === 'Enter') {
+      _addCard()
+    }
+  }
+
+  const _onClickAddCardBtn = (): void => {
+    setAddCardMode(true)
+    setTimeout(() => {
+      inputCardNameRef.current.focus()
+    }, 100)
+  }
+
+  const _onClickRemoveColumnBtn = (): void => {
     const remainedCardLen = _.size(column.cardIdList)
     if (remainedCardLen > 0) {
       Alert.alert({
@@ -92,9 +155,30 @@ const Column = ({
         >
           <Header>
             <Title {...provided.dragHandleProps}>{column.name}</Title>
-            <RemoveBtn onClick={_onRemoveBtnClick}>X</RemoveBtn>
+            <RemoveBtn onClick={_onClickRemoveColumnBtn}>X</RemoveBtn>
           </Header>
-
+          {addCardMode ? (
+            <InputCardName
+              ref={inputCardNameRef}
+              value={inputCardName}
+              onChange={({ target: { value } }): void => {
+                setInputCardName(value)
+              }}
+              onKeyPress={_onKeyPressInputName}
+              onBlur={_addCard}
+            />
+          ) : (
+            <AddCardBox>
+              <Button
+                variant={'info'}
+                block
+                size={'sm'}
+                onClick={_onClickAddCardBtn}
+              >
+                + Add Card
+              </Button>
+            </AddCardBox>
+          )}
           <Droppable droppableId={column.id} type="card">
             {(provided, snapshot): JSX.Element => (
               <CardListBox
@@ -102,7 +186,7 @@ const Column = ({
                 {...provided.droppableProps}
                 isDraggingOver={snapshot.isDraggingOver}
               >
-                <CardList cardList={cardList} />
+                <CardList cardList={columnCardList} />
                 {provided.placeholder}
               </CardListBox>
             )}
