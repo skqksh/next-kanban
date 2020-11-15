@@ -1,116 +1,56 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import React, { useEffect, useState } from 'react'
+import { Container, Modal } from 'react-bootstrap'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import _ from 'lodash'
 
+import AddColumn from './AddColumn'
+import CardBoard from './CardBoard'
 import data from '../../data'
 
-import Column from '../../component/Column'
-
-const Container = styled.div`
-  display: flex;
-`
-
-const InnerList = ({ column, issueMap, index }): JSX.Element => {
-  const issueList = column.issueIdList.map((issueId) => issueMap[issueId])
-  return <Column column={column} issueList={issueList} index={index} />
-}
+import atom from '@atom'
+import CardDetail from './CardDetail'
 
 const Home = (): JSX.Element => {
-  const [columnOrder, setColumnOrder] = useState(data.columnOrder)
-  const [columnList, setColumns] = useState(data.columnList)
-  const [issueList] = useState(data.issueList)
+  const [initComplete, setInitComplete] = useState(false)
 
-  const onDragEnd = (result) => {
-    const { destination, source, draggableId, type } = result
+  const setCardList = useSetRecoilState(atom.CardList)
+  const setColumnList = useSetRecoilState(atom.ColumnList)
+  const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
+  const setCardDetailId = useSetRecoilState(atom.CardDetailId)
 
-    if (!destination) {
-      return
-    }
+  const cardDetail = useRecoilValue(atom.CardDetail)
 
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return
-    }
-
-    if (type === 'column') {
-      const newColumnOrder = Array.from(columnOrder)
-      newColumnOrder.splice(source.index, 1)
-      newColumnOrder.splice(destination.index, 0, draggableId)
-
-      setColumnOrder(newColumnOrder)
-      return
-    }
-
-    const home = columnList[source.droppableId]
-    const foreign = columnList[destination.droppableId]
-
-    if (home === foreign) {
-      const newissueIdList = Array.from(home.issueIdList)
-      newissueIdList.splice(source.index, 1)
-      newissueIdList.splice(destination.index, 0, draggableId)
-
-      const newHome = {
-        ...home,
-        issueIdList: newissueIdList,
-      }
-
-      setColumns({
-        ...columnList,
-        [newHome.id]: newHome,
-      })
-
-      return
-    }
-
-    // moving from one list to another
-    const homeissueIdList = Array.from(home.issueIdList)
-    homeissueIdList.splice(source.index, 1)
-    const newHome = {
-      ...home,
-      issueIdList: homeissueIdList,
-    }
-
-    const foreignissueIdList = Array.from(foreign.issueIdList)
-    foreignissueIdList.splice(destination.index, 0, draggableId)
-    const newForeign = {
-      ...foreign,
-      issueIdList: foreignissueIdList,
-    }
-
-    setColumns({
-      ...columnList,
-      [newHome.id]: newHome,
-      [newForeign.id]: newForeign,
-    })
+  const _onHideCardDetail = (): void => {
+    setCardDetailId('')
   }
 
+  useEffect(() => {
+    setColumnList(data.columnList)
+    const sortedColumnOrder = _.map(
+      _.sortBy(_.toArray(data.columnList), (x) => x.order),
+      (x) => x.id
+    )
+    setColumnOrder(sortedColumnOrder)
+    setCardList(data.cardList)
+    setInitComplete(true)
+  }, [])
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable
-        droppableId="all-columnList"
-        direction="horizontal"
-        type="column"
+    <Container fluid>
+      {initComplete && (
+        <>
+          <AddColumn />
+          <CardBoard />
+        </>
+      )}
+      <Modal
+        show={_.some(cardDetail)}
+        onHide={_onHideCardDetail}
+        size="lg"
       >
-        {(provided) => (
-          <Container {...provided.droppableProps} ref={provided.innerRef}>
-            {columnOrder.map((columnId, index) => {
-              const column = columnList[columnId]
-              return (
-                <InnerList
-                  key={column.id}
-                  column={column}
-                  issueMap={issueList}
-                  index={index}
-                />
-              )
-            })}
-            {provided.placeholder}
-          </Container>
-        )}
-      </Droppable>
-    </DragDropContext>
+        {cardDetail && <CardDetail card={cardDetail} />}
+      </Modal>
+    </Container>
   )
 }
 

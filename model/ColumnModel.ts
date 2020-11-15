@@ -1,5 +1,6 @@
 export default interface ColumnModel {
   id: string
-  title: string
-  issueIdList: string[]
+  name: string
+  order: number
+  cardIdList: string[]
 }

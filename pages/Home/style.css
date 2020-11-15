@@ -52,7 +52,7 @@ body {
     0px 0px 15px rgba(255, 110, 255, 0.8);
 }
 
-.issue-list {
+.card-list {
   /* this has no visible impact, but is in line with the absolute position spacing.
   doing this ensures that dropping into an empty list will be in the correct visual position */
   padding-left: var(--grid);
@@ -60,16 +60,16 @@ body {
   scrollbar-color: dark;
 }
 
-.issue-list::-webkit-scrollbar {
+.card-list::-webkit-scrollbar {
   width: 1em;
 }
 
-.issue-list::-webkit-scrollbar-track {
+.card-list::-webkit-scrollbar-track {
   background-color: var(--greyLight);
   borderradius: var(--borderRadius);
 }
 
-.issue-list::-webkit-scrollbar-thumb {
+.card-list::-webkit-scrollbar-thumb {
   background-color: var(--pink);
 }
 
