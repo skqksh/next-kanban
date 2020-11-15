@@ -68,7 +68,6 @@ const Column = ({
   const [cardList, setCardList] = useRecoilState(atom.CardList)
   const [columnList, setColumnList] = useRecoilState(atom.ColumnList)
   const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
-
   const inputCardNameRef = useRef<HTMLInputElement>()
 
   const columnCardList = _.toArray(

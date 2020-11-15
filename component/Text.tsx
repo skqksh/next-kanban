@@ -7,7 +7,7 @@ const StyledText = styled.div`
 `
 
 export const Text = (
-  props: React.DOMAttributes<HTMLDivElement>
+  props: React.HTMLAttributes<HTMLDivElement>
 ): JSX.Element => {
   return <StyledText {...props} />
 }

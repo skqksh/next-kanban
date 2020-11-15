@@ -3,11 +3,12 @@ import { Container, Modal } from 'react-bootstrap'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import _ from 'lodash'
 
+import data from '../../data'
+import atom from '@atom'
+
 import AddColumn from './AddColumn'
 import CardBoard from './CardBoard'
-import data from '../../data'
-
-import atom from '@atom'
+import FilterSection from './FilterSection'
 import CardDetail from './CardDetail'
 
 const Home = (): JSX.Element => {
@@ -36,9 +37,10 @@ const Home = (): JSX.Element => {
   }, [])
 
   return (
-    <Container fluid>
+    <Container fluid style={{ minHeight: 700 }}>
       {initComplete && (
         <>
+          <FilterSection />
           <AddColumn />
           <CardBoard />
         </>
