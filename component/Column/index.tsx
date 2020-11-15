@@ -10,7 +10,7 @@ import ColumnModel from '@model/ColumnModel'
 import CardList from '../CardList'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import atom from '@atom'
-import { Button } from 'react-bootstrap'
+import { Button, Row, Col, Dropdown, Modal } from 'react-bootstrap'
 import CardModel, { CardStatusEnum } from '@model/CardModel'
 
 const Container = styled.div`
@@ -27,21 +27,7 @@ const Container = styled.div`
 const Header = styled.div`
   position: relative;
 `
-const RemoveBtn = styled.button`
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 10px 15px;
-  background-color: white;
-  border: none;
-  border-radius: 50px;
-  :focus {
-    outline: none;
-  }
-  :hover {
-    background-color: #eee;
-  }
-`
+
 const Title = styled.h3`
   padding: 8px;
 `
@@ -61,6 +47,10 @@ const InputCardName = styled.input`
   margin-bottom: 10px;
 `
 
+const InputColumnName = styled.input`
+  width: 100%;
+`
+
 const Column = ({
   column,
   index,
@@ -68,9 +58,13 @@ const Column = ({
   column: ColumnModel
   index: number
 }): JSX.Element => {
+  const [showColumnEditModal, setShowColumnEditModal] = useState(
+    false
+  )
+  const [inputColumnName, setInputColumnName] = useState(column.name)
+
   const [addCardMode, setAddCardMode] = useState(false)
   const [inputCardName, setInputCardName] = useState('')
-
   const [cardList, setCardList] = useRecoilState(atom.CardList)
   const [columnList, setColumnList] = useRecoilState(atom.ColumnList)
   const setColumnOrder = useSetRecoilState(atom.ColumnOrder)
@@ -85,7 +79,7 @@ const Column = ({
     const _inputCardName = inputCardName.trim()
     if (_inputCardName) {
       const newCardList = _.clone(cardList)
-      const cardId = `card-${_.size(cardList) + 1}`
+      const cardId = `card-${new Date().getTime()}`
       const newCard: CardModel = {
         id: cardId,
         createDate: new Date(),
@@ -141,9 +135,37 @@ const Column = ({
         setColumnOrder((ori) => {
           return ori.filter((x) => x !== column.id)
         })
-        // TODO : remove it in columnList
+        const newColumnList = _.clone(columnList)
+        delete newColumnList[column.id]
+        setColumnList(newColumnList)
       },
     })
+  }
+
+  const _onClickColumnNameSaveBtn = (): void => {
+    if (_.isEmpty(inputColumnName)) {
+      Alert.alert({ message: 'Column name should not be empty' })
+      return
+    }
+    if (
+      _.some(
+        columnList,
+        (x) => x.id !== column.id && x.name === inputColumnName
+      )
+    ) {
+      Alert.alert({
+        message: `"${inputColumnName}" is already exist`,
+      })
+      return
+    }
+
+    const newColumnList = _.clone(columnList)
+    const newColumn = _.clone(newColumnList[column.id])
+    newColumn.name = inputColumnName
+    newColumnList[column.id] = newColumn
+    setColumnList(newColumnList)
+
+    setShowColumnEditModal(false)
   }
 
   return (
@@ -154,8 +176,52 @@ const Column = ({
           ref={provided.innerRef}
         >
           <Header>
-            <Title {...provided.dragHandleProps}>{column.name}</Title>
-            <RemoveBtn onClick={_onClickRemoveColumnBtn}>X</RemoveBtn>
+            <Row>
+              <Col>
+                <Title {...provided.dragHandleProps}>
+                  {column.name}
+                </Title>
+                <Modal
+                  size="sm"
+                  show={showColumnEditModal}
+                  onHide={(): void => {
+                    setShowColumnEditModal(false)
+                  }}
+                >
+                  <Modal.Header closeButton>Column</Modal.Header>
+                  <Modal.Body>
+                    <InputColumnName
+                      value={inputColumnName}
+                      onChange={({ target: { value } }): void => {
+                        setInputColumnName(value)
+                      }}
+                    />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button onClick={_onClickColumnNameSaveBtn}>
+                      Save
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </Col>
+              <Col md={'auto'}>
+                <Dropdown>
+                  <Dropdown.Toggle variant="secondary" />
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={(): void => {
+                        setShowColumnEditModal(true)
+                      }}
+                    >
+                      Edit Column
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={_onClickRemoveColumnBtn}>
+                      Remove Column
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Col>
+            </Row>
           </Header>
           {addCardMode ? (
             <InputCardName

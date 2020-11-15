@@ -33,7 +33,7 @@ const AddColumn = (): JSX.Element => {
     const title = inputTitle.trim()
     setInputTitle(title)
     if (_.isEmpty(title)) {
-      Alert.alert({ message: 'Input column title. please :)' })
+      Alert.alert({ message: 'Column name should not be empty' })
       return
     }
     if (_.some(columnList, (x) => x.name === title)) {
@@ -41,7 +41,7 @@ const AddColumn = (): JSX.Element => {
       return
     }
 
-    const columnId = `column-${_.size(columnList) + 1}`
+    const columnId = `column-${new Date().getTime()}`
     const newColumn: ColumnModel = {
       id: columnId,
       name: title,
@@ -76,7 +76,7 @@ const AddColumn = (): JSX.Element => {
   return (
     <Con>
       <InputColumnTitle
-        placeholder={'Column Title'}
+        placeholder={'Column Name'}
         value={inputTitle}
         onChange={_onChange}
         onKeyPress={_onKeyPress}
