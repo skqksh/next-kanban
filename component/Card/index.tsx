@@ -10,13 +10,17 @@ import { useSetRecoilState } from 'recoil'
 import atom from '@atom'
 
 const Container = styled.div<{ isDragging: boolean }>`
+  background-color: ${(props): string =>
+    props.isDragging ? 'lightgreen' : 'white'};
+`
+
+const CardBox = styled.div`
   position: relative;
   border: 1px solid ${Colors.line};
   border-radius: 2px;
   padding: 10px;
   margin-bottom: 8px;
-  background-color: ${(props): string =>
-    props.isDragging ? 'lightgreen' : 'white'};
+  cursor: pointer;
 `
 
 const StatusBox = styled.div`
@@ -25,18 +29,35 @@ const StatusBox = styled.div`
   left: -5px;
 `
 
-const Card = ({
+export const Card = ({ card }: { card: CardModel }): JSX.Element => {
+  const setCardDetailId = useSetRecoilState(atom.CardDetailId)
+  const _onClick = (): void => {
+    setCardDetailId(card.id)
+  }
+
+  return (
+    <CardBox>
+      <div onClick={_onClick}>
+        {card.name}
+        <StatusBox>
+          {card.status === 'Open' ? (
+            <Badge variant="success">Open</Badge>
+          ) : (
+            <Badge variant="dark">Close</Badge>
+          )}
+        </StatusBox>
+      </div>
+    </CardBox>
+  )
+}
+
+const DraggableCard = ({
   card,
   index,
 }: {
   card: CardModel
   index: number
 }): JSX.Element => {
-  const setCardDetailId = useSetRecoilState(atom.CardDetailId)
-  const _onClick = (): void => {
-    setCardDetailId(card.id)
-  }
-
   return (
     <Draggable draggableId={card.id} index={index}>
       {(provided, snapshot): JSX.Element => (
@@ -45,20 +66,12 @@ const Card = ({
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
-          onClick={_onClick}
         >
-          {card.name}
-          <StatusBox>
-            {card.status === 'Open' ? (
-              <Badge variant="success">Open</Badge>
-            ) : (
-              <Badge variant="dark">Close</Badge>
-            )}
-          </StatusBox>
+          <Card card={card} />
         </Container>
       )}
     </Draggable>
   )
 }
 
-export default Card
+export default DraggableCard

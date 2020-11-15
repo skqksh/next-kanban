@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 
-import Card from '../Card'
+import DraggableCard from '../Card'
 import CardModel from '@model/CardModel'
 
 const CardList = React.memo(
@@ -9,7 +9,7 @@ const CardList = React.memo(
     return (
       <>
         {_.map(cardList, (card, index) => (
-          <Card key={card.id} card={card} index={index} />
+          <DraggableCard key={card.id} card={card} index={index} />
         ))}
       </>
     )
