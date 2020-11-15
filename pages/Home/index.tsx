@@ -36,7 +36,7 @@ const Home = (): JSX.Element => {
   }, [])
 
   return (
-    <Container fluid>
+    <Container fluid style={{ minHeight: 700 }}>
       {initComplete && (
         <>
           <AddColumn />
