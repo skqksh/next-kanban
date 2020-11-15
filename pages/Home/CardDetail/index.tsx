@@ -70,8 +70,8 @@ const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
   const [nameEditMode, setNameEditMode] = useState(false)
   const [descEditMode, setDescEditMode] = useState(false)
 
-  const [inputName, setInputName] = useState(card.name)
-  const [inputDesc, setInputDesc] = useState(card.description)
+  const [inputName, setInputName] = useState(card?.name)
+  const [inputDesc, setInputDesc] = useState(card?.description)
 
   const inputCardNameRef = useRef<HTMLInputElement>()
   const cardDescInputRef = useRef<HTMLTextAreaElement>()
@@ -110,7 +110,7 @@ const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
   }
 
   const _cancelUpdateDesc = (): void => {
-    setInputDesc(card.description)
+    setInputDesc(card?.description)
     setDescEditMode(false)
   }
 
@@ -123,90 +123,100 @@ const CardDetail = ({ card }: { card: CardModel }): JSX.Element => {
   }
 
   return (
-    <Container>
-      <Modal.Header closeButton>
-        {nameEditMode ? (
-          <InputCardName
-            ref={inputCardNameRef}
-            value={inputName}
-            onChange={({ target: { value } }): void => {
-              setInputName(value)
-            }}
-            onKeyPress={_onKeyPressName}
-            onBlur={_updateName}
-          />
-        ) : (
-          <EditMode
-            onClick={(): void => {
-              setNameEditMode(true)
-              setTimeout(() => {
-                inputCardNameRef.current.focus()
-              }, 100)
-            }}
-          >
-            <CardName>{card.name}</CardName>
-          </EditMode>
-        )}
-      </Modal.Header>
-      <Row>
-        <Col md={8}>
-          <ItemTitle>Description</ItemTitle>
-          {descEditMode ? (
-            <>
-              <CardDescTextArea
-                ref={cardDescInputRef}
-                value={inputDesc}
+    <>
+      {card && (
+        <Container>
+          <Modal.Header closeButton>
+            {nameEditMode ? (
+              <InputCardName
+                ref={inputCardNameRef}
+                value={inputName}
                 onChange={({ target: { value } }): void => {
-                  setInputDesc(value)
+                  setInputName(value)
                 }}
+                onKeyPress={_onKeyPressName}
+                onBlur={_updateName}
               />
-              <ButtonBox>
-                <Button
-                  style={{ marginRight: 5 }}
-                  onClick={_updateDesc}
+            ) : (
+              <EditMode
+                onClick={(): void => {
+                  setNameEditMode(true)
+                  setTimeout(() => {
+                    inputCardNameRef.current.focus()
+                  }, 100)
+                }}
+              >
+                <CardName>{card?.name}</CardName>
+              </EditMode>
+            )}
+          </Modal.Header>
+          <Row>
+            <Col md={8}>
+              <ItemTitle>Description</ItemTitle>
+              {descEditMode ? (
+                <>
+                  <CardDescTextArea
+                    ref={cardDescInputRef}
+                    value={inputDesc}
+                    onChange={({ target: { value } }): void => {
+                      setInputDesc(value)
+                    }}
+                  />
+                  <ButtonBox>
+                    <Button
+                      style={{ marginRight: 5 }}
+                      onClick={_updateDesc}
+                    >
+                      save
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={_cancelUpdateDesc}
+                    >
+                      cancel
+                    </Button>
+                  </ButtonBox>
+                </>
+              ) : (
+                <EditMode
+                  onClick={(): void => {
+                    setDescEditMode(true)
+                    setTimeout(() => {
+                      cardDescInputRef.current.focus()
+                    }, 100)
+                  }}
                 >
-                  save
-                </Button>
-                <Button variant="danger" onClick={_cancelUpdateDesc}>
-                  cancel
-                </Button>
-              </ButtonBox>
-            </>
-          ) : (
-            <EditMode
-              onClick={(): void => {
-                setDescEditMode(true)
-                setTimeout(() => {
-                  cardDescInputRef.current.focus()
-                }, 100)
-              }}
-            >
-              <Description>{card.description}</Description>
-            </EditMode>
-          )}
-        </Col>
-        <Col md={4}>
-          <SideSection>
-            <ItemTitle>Status</ItemTitle>
-            <select onChange={_onChangeStatus} value={card.status}>
-              {_.map(CardStatusEnum, (v) => {
-                return <option key={v}>{v}</option>
-              })}
-            </select>
-          </SideSection>
-          <SideSection>
-            <ItemTitle>Created</ItemTitle>
-            <Text>
-              {moment(card.createDate).format('YYYY-MM-DD HH:mm')}
-            </Text>
-          </SideSection>
-          <SideSection>
-            <ItemTitle>Updated</ItemTitle>
-            <Text>{moment(card.updatedDate).fromNow()}</Text>
-          </SideSection>
-        </Col>
-      </Row>
-    </Container>
+                  <Description>{card?.description}</Description>
+                </EditMode>
+              )}
+            </Col>
+            <Col md={4}>
+              <SideSection>
+                <ItemTitle>Status</ItemTitle>
+                <select
+                  onChange={_onChangeStatus}
+                  value={card.status}
+                >
+                  {_.map(CardStatusEnum, (v) => {
+                    return <option key={v}>{v}</option>
+                  })}
+                </select>
+              </SideSection>
+              <SideSection>
+                <ItemTitle>Created</ItemTitle>
+                <Text>
+                  {moment(card.createDate).format('YYYY-MM-DD HH:mm')}
+                </Text>
+              </SideSection>
+              <SideSection>
+                <ItemTitle>Updated</ItemTitle>
+                <Text>{moment(card.updatedDate).fromNow()}</Text>
+              </SideSection>
+            </Col>
+          </Row>
+        </Container>
+      )}
+    </>
   )
 }
 
